@@ -7,6 +7,16 @@
         </Card>
     </div>
     <Form ref="safeintersection" :model="safeintersection" :rules="ruleValidate" :label-width="80">
+        <FormItem label="Host数据" prop="hostselectedvalue">
+            <Select v-model="safeintersection.hostselectedvalue">
+                <Option v-for="item in hostData" :value="item.data_id" :key="item.data_id">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="Guest数据" prop="guestselectedvalue">
+            <Select v-model="safeintersection.guestselectedvalue">
+                <Option v-for="item in guestData" :value="item.data_id" :key="item.data_id">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
+            </Select>
+        </FormItem>
         <FormItem label="取数时间" prop="SampleFetchingtime">
             <Input v-model="safeintersection.SampleFetchingtime" placeholder="请输入数据的取数时间"></Input>
         </FormItem>
@@ -21,19 +31,40 @@
         </FormItem>
         <FormItem>
             <Button type="primary" @click="handleSubmit('safeintersection')">Submit</Button>
-            <Button @click="handleReset('safeintersection')" style="margin-left: 8px">Reset</Button>
         </FormItem>
     </Form>
 </div>
 </template>
 <script>
+import http from '@/utils/http';
+import { taskForm } from '@/store/module/studyTask';
 export default {
     data () {
         return {
+            tabType: 'study',
+            hostData: [
+            ],
+            guestData: [],
+            btnLoading: false,
+            taskForm,
+            taskRule: {},
+            baseRule: {
+                'projectname': [
+                { required: true, message: '请输入项目的名称', trigger: 'blur' }
+                ],
+                'host.namespace': [
+                { required: true, message: '请选择Host方数据', trigger: 'change' }
+                ],
+                'guest.namespace': [
+                { required: true, message: '请选择Guest方数据', trigger: 'change' }
+                ],
+            },
             safeintersection: {
                 SampleFetchingtime: '',
                 dataperiod: '',
                 datatype: '',
+                hostselectedvalue:"",
+                guestselectedvalue:""
             },
             ruleValidate: {
                 SampleFetchingtime: [
@@ -49,7 +80,11 @@ export default {
         }
     },
     methods: {
-        handleSubmit (SampleFetchingtime) {
+        handleSubmit(SampleFetchingtime){
+            setTimeout(this.handleSub(SampleFetchingtime),10)
+        },
+        handleSub (SampleFetchingtime) {
+            console.log("5555")
             this.$refs[SampleFetchingtime].validate((valid) => {
                 if (valid) {
                     this.$Message.success('Success!');
@@ -61,9 +96,28 @@ export default {
                 }
             })
         },
-        handleReset (SampleFetchingtime) {
-            this.$refs[SampleFetchingtime].resetFields();
-        }
+        getdata(){
+            Promise.all([http.get("getDatainfo")]).then(resList => {
+                resList.forEach((item)=>{
+                // console.log(item)
+                item.forEach((itemson)=>{
+                    console.log(itemson.data_attribution)
+                    if(itemson.data_attribution==0){
+                    this.hostData.push(itemson)
+                    }else if(itemson.data_attribution==1){
+                    this.guestData.push(itemson)
+                    }
+                    })
+                
+                })
+            });
+        },
+      
+    },
+    mounted(){
+        this.getdata()
     }
 }
 </script>
+
+

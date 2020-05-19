@@ -7,16 +7,7 @@
           <FormItem label="项目名称" prop="projectname">
             <Input v-model="projectname" placeholder="请输入项目的名称"></Input>
           </FormItem>
-          <FormItem label="Host方数据" prop="host.namespace">
-            <Select v-model="hostselectedvalue">
-              <Option v-for="item in hostData" :value="item.data_name" :key="item.data_name">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="Guest方数据" prop="guest.namespace">
-            <Select v-model="guestselectedvalue">
-              <Option v-for="item in guestData" :value="item.data_name" :key="item.data_name">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
-            </Select>
-          </FormItem>
+ 
           <FormItem v-show="tabType === 'study'" label="选择模型" prop="model_type">
             <RadioGroup v-model="taskForm.model_type" vertical>
               <Radio label="Hetero Logistic Regression"></Radio>
