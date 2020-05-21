@@ -1,6 +1,7 @@
 <template>
 <div>
 	<div style="border:5px solid #ccc;" id="fefather">
+		<div class="role">{{item.role.value}}</div>
         <div id="handdelete" @click="(evt) => $emit('on-click', evt)">删除</div>
 		<div class="fe">
 			<div class="felabel"><span>数据处理 : </span></div>
@@ -71,7 +72,7 @@
 		<div class="fe" v-if="fefangshivalue=='特征过滤'">
 			<div class="felabel"><span>过滤字段 : </span></div>
 			<div class="fevalue">
-				<Input value="*" placeholder="Enter field" clearable style="width: 200px" />
+				<Input v-model="guolvziduanvalue" placeholder="Enter field" clearable style="width: 200px" />
 			</div>	
 		</div>
 		<div class="fe" v-if="fefangshivalue=='特征过滤'&&guolvfangshivalue=='基于列过滤'">
@@ -129,78 +130,106 @@
 <script>
 export default {
     props: {
-        itemData: {
-            default: () => {
-                return {};
-            }
-        }
-    },
+		item:Object
+	},
+	watch: {
+		item (newV) {
+			this.fefangshivalue = this.item.fefangshivalue.value;
+			this.fenxiangfangshivalue = this.item.fenxiangfangshivalue.value;
+			this.guolvfangshivalue = this.item.guolvfangshivalue.value;
+			this.guolvfangshivalue2 = this.item.guolvfangshivalue2.value;
+			this.guolvfangshivalueno = this.item.guolvfangshivalueno.value;
+			this.guolvfangshivaluenofiled = this.item.guolvfangshivaluenofiled.value;
+			this.guolvfangshivaluetongjixinxi = this.item.guolvfangshivaluetongjixinxi.value;
+			this.tianchongfangshivalue = this.item.tianchongfangshivalue.value;
+			this.fenxiangziduanvalue = this.item.fenxiangziduanvalue.value;
+			this.fengxiangfenxiangshuvalue = this.item.fengxiangfenxiangshuvalue.value;
+			this.tianchongziduanvalue = this.item.tianchongziduanvalue.value;
+			this.fangchaxiaxianvalue = this.item.fangchaxiaxianvalue.value;
+			this.queshilvshangxianvalue = this.item.queshilvshangxianvalue.value;
+			this.guolvtiaojian2value = this.item.guolvtiaojian2value.value;
+			this.guolvtiaojianvalue = this.item.guolvtiaojianvalue.value;
+			this.guolvfenxiangshuvalue = this.item.guolvfenxiangshuvalue.value;
+			this.dureziduanvalue = this.item.dureziduanvalue.value;
+			this.zidingtianchongziduanvalue = this.item.zidingtianchongziduanvalue.value;
+			this.guolvziduanvalue = this.item.guolvziduanvalue.value;
+		}
+	},
 	data(){
 		return{
-			fefangshivalue:"分箱",
 			fefangshi:[
 				{value:"分箱",label:"分箱"},
 				{value:"独热",label:"独热"},
 				{value:"特征过滤",label:"特征过滤"},
 				{value:"缺失值填充",label:"缺失值填充"},
 			],
-			fenxiangfangshivalue:"等频分箱",
+
 			fenxiangfangshis:[
 				{value:"等距分箱",label:"等距分箱"},
 				{value:"等频分箱",label:"等频分箱"},
 			],
-			guolvfangshivalue:"基于列过滤",
+
 			guolvfangshis:[
 				{value:"基于列过滤",label:"基于列过滤"},
 				{value:"根据IV值过滤",label:"根据IV值过滤"},
 				{value:"根据统计信息值过滤",label:"根据统计信息值过滤"},
 			],
-			guolvfangshivalue2:"过滤未选中列",
+
 			guolvfangshis2:[
 				{value:"过滤未选中列",label:"过滤未选中列"},
 				{value:"过滤选中列",label:"过滤选中列"},
 			],
-			guolvfangshivalueno:"等距分箱",
+
 			guolvfangshisno:[
 				{value:"等距分箱",label:"等距分箱"},
 				{value:"等频分箱",label:"等频分箱"},
 			],
-			guolvfangshivaluenofiled:"保留",
+
 			guolvfangshisnofiled:[
 				{value:"保留",label:"保留"},
 				{value:"过滤",label:"过滤"},
 			],
-			guolvfangshivaluetongjixinxi:"方差",
+
 			guolvfangshitongjixinxi:[
 				{value:"缺失率",label:"缺失率"},
 				{value:"方差",label:"方差"},
 			],
-			tianchongfangshivalue:"填充平均值",
+
 			tianchongfangshis:[
 				{value:"填充最小值",label:"填充最小值"},
 				{value:"填充最大值",label:"填充最大值"},
 				{value:"填充平均值",label:"填充平均值"},
 				{value:"填充中位数",label:"填充中位数"},
-				{value:"自定义填充值",label:"自定义填充值"},			
+				{value:"自定义填充值",label:"自定义填充值"},
 			],
-			fenxiangziduanvalue:"*",
-			fengxiangfenxiangshuvalue:5,
-			tianchongziduanvalue:"*",
-			fangchaxiaxianvalue:3,
-			queshilvshangxianvalue:0.5,
-			guolvtiaojian2value:1,
-			guolvtiaojianvalue:0.1,
-			guolvfenxiangshuvalue:5,
-			dureziduanvalue:"*",
-			zidingtianchongziduanvalue:0
+			fefangshivalue: this.item.fefangshivalue.value,
+			fenxiangfangshivalue: this.item.fenxiangfangshivalue.value,
+			guolvfangshivalue: this.item.guolvfangshivalue.value,
+			guolvfangshivalue2: this.item.guolvfangshivalue2.value,
+			guolvfangshivalueno: this.item.guolvfangshivalueno.value,
+			guolvfangshivaluenofiled: this.item.guolvfangshivaluenofiled.value,
+			guolvfangshivaluetongjixinxi: this.item.guolvfangshivaluetongjixinxi.value,
+			tianchongfangshivalue: this.item.tianchongfangshivalue.value,
+			fenxiangziduanvalue: this.item.fenxiangziduanvalue.value,
+			fengxiangfenxiangshuvalue: this.item.fengxiangfenxiangshuvalue.value,
+			tianchongziduanvalue: this.item.tianchongziduanvalue.value,
+			fangchaxiaxianvalue: this.item.fangchaxiaxianvalue.value,
+			queshilvshangxianvalue: this.item.queshilvshangxianvalue.value,
+			guolvtiaojian2value: this.item.guolvtiaojian2value.value,
+			guolvtiaojianvalue: this.item.guolvtiaojianvalue.value,
+			guolvfenxiangshuvalue: this.item.guolvfenxiangshuvalue.value,
+			dureziduanvalue: this.item.dureziduanvalue.value,
+			zidingtianchongziduanvalue: this.item.zidingtianchongziduanvalue.value,
+			guolvziduanvalue: this.item.guolvziduanvalue.value,
 		}
 	},
 	methods:{
-		shujuchuli(fefangshivalue){
-			console.log(fefangshivalue)
-        },
         getData() {
             return {
+				role:{
+					value:this.item.role.value,
+					isoutput:true
+				},
 				fefangshivalue: {
 					value:this.fefangshivalue,
 					isoutput:true
@@ -217,6 +246,10 @@ export default {
 					value:this.guolvfangshivalue2,
 					isoutput:this.fefangshivalue=='特征过滤'&&this.guolvfangshivalue=='基于列过滤'
 				},
+				guolvziduanvalue:{
+					value:this.guolvziduanvalue,
+					isoutput:this.fefangshivalue=='特征过滤'
+				},				
 				guolvfangshivalueno:{
 					value:this.guolvfangshivalueno,
 					isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
@@ -276,14 +309,26 @@ export default {
 			}
 		},
 		changeProduct() {
-			console.log("你选中了",this.fefangshivalue)
-			console.log(this.$refs)
-        }
-	}
+			// console.log("你选中了",this.fefangshivalue)
+			// console.log(this.$refs)
+		},
+	},
 }
 </script>
 
 <style scoped>
+.role{
+	width: 80px;
+    height: 30px;
+    background-color: blue;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    /* left: %; */
+    top: 100%;
+	border-radius: 20%;
+    position: relative;
+}
 #fefather{
 	padding:50px;
 }

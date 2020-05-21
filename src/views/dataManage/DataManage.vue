@@ -86,8 +86,10 @@ export default {
 			return http.get('getDatainfo');
 		},
 		getdata(){
+			// alert("5555")
 			Promise.all([this.createHttp()]).then(resList => {
 				this.data1 = resList;
+				// alert("333333")
 				// console.log(this.data1)this.data1
 				this.data1.forEach((ii)=>{
 					ii.forEach((iison)=>{
@@ -112,8 +114,14 @@ export default {
 			});
 		}
 	},
-	mounted(){
+	created(){
 		this.getdata()
+	},
+	mounted(){
+		// setTimeout(this.getdata(),500)
+		// location.reload()
+		// alert("15151")
+		// console.log("5555555555555555555555")
 	}
 }
 </script>

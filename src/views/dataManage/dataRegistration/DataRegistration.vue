@@ -51,7 +51,7 @@ import http from '@/utils/http';
                 }else{
                     datatype=1
                 }    
-			    return  http.get('insertDatainfo?data_name='+this.dataregistration.dataname+'&data_type='+ datatype+'&data_attribution=0&data_path='+this.dataregistration.datapath);
+			    return  http.get('insertDatainfo?data_name='+this.dataregistration.dataname+'&data_type='+ datatype+'&data_attribution=1&data_path='+this.dataregistration.datapath);
 		    },
             getdata(){
                 Promise.all([this.createHttp()]).then(resList => {
@@ -65,8 +65,10 @@ import http from '@/utils/http';
                         this.$Message.success('Success!');
                         console.log(this.dataregistration)
                         this.getdata()
+                        // http.get('getDatainfo')
                         this.$router.push({path:'/dataManage'}) 
-                        http.get('getDatainfo')
+                        location.reload()
+                        // this.$router.go(0)
                     } else {
                         this.$Message.error('Fail!');
                     }

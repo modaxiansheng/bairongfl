@@ -4,7 +4,7 @@
       <div style="position: relative">
       
         <Form ref="taskForm" :model="taskForm" :rules="taskRule" :label-width="100" style="width: 400px;">
-          <FormItem label="项目名称" prop="projectname">
+          <FormItem label="项目名称" prop="projectName">
             <Input v-model="projectname" placeholder="请输入项目的名称"></Input>
           </FormItem>
           <FormItem label="Host方数据" prop="host.namespace">
@@ -17,7 +17,11 @@
               <Option v-for="item in guestData" :value="item.data_name" :key="item.data_name">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
             </Select>
           </FormItem>
-        
+           <FormItem label="选择模型" prop="model.id">
+              <Select v-model="modelInfo.selectedmodel">
+                <Option v-for="(item,itemindex) in modelInfo.modelInfos" :value="item" :key="itemindex">{{ item }}</Option>
+              </Select>
+            </FormItem>
           <FormItem label="">
             <Button type="primary" :loading="btnLoading" @click="handleSubmit">提交预测任务</Button>
           </FormItem>
@@ -35,6 +39,10 @@ export default {
   name: 'StudyTask',
   data () {
     return {
+      modelInfo:{
+        selectedmodel:"",
+        modelInfos:[]
+      },
       tabType: 'study',
       hostData: [
       ],
@@ -43,7 +51,7 @@ export default {
       taskForm,
       taskRule: {},
       baseRule: {
-        'projectname': [
+        'projectName': [
           { required: true, message: '请输入项目的名称', trigger: 'blur' }
         ],
         'host.namespace': [
@@ -76,9 +84,9 @@ export default {
     getdata(){
         Promise.all([http.get("getDatainfo")]).then(resList => {
             resList.forEach((item)=>{
-               console.log(item)
+              //  console.log(item)
                item.forEach((itemson)=>{
-                 console.log(itemson.data_attribution)
+                //  console.log(itemson.data_attribution)
                  if(itemson.data_attribution==0){
                    this.hostData.push(itemson)
                  }else if(itemson.data_attribution==1){
@@ -88,6 +96,23 @@ export default {
                
             })
         });
+         Promise.all([http.get("getModelinfo")]).then(resList => {
+            resList.forEach((item)=>{
+              //  console.log(item[0].model_version)
+               this.modelInfo.modelInfos=item[0].model_version
+              //  console.log( this.modelInfo.modelInfos)
+                 for(var item in this.modelInfo.modelInfos){
+                    console.log(item)
+                    console.log(this.modelInfo.modelInfos[item])
+                    
+                }
+            })
+        });
+        // for(var item in this.modelInfo.modelInfos){
+        //     console.log(item)
+            // console.log(this.modelInfo.modelInfos.length)
+            
+        // }
     },
   },
   mounted(){

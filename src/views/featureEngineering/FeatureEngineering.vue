@@ -8,14 +8,23 @@
     </div>
 	<FeFather
 		ref="fefather"
-		v-for="index in felist"
-		:key="index"
-		:index="index"
-		@on-click="handledelete(index)"		
+		v-for="item in fesonshowparamitem"
+		:key="item.myId"
+		:item="item"
+		@on-click="handledelete(item.myId)"
 	>
 	</FeFather>
-	<div @click="addfe" id="addfe">添加数据处理</div>
-	<div @click="save" id="save">保存</div>
+	<div @click="addfe('host')" class="addfe">添加host数据处理</div>
+	<div @click="addfe('guest')" class="addfe">添加guest数据处理</div>
+	<Button type="primary" :loading="btnLoading" @click="modal1 = true" id="save">保存</Button>
+	<Modal
+		v-model="modal1"
+		title="您确定要提交训练任务吗？"
+		@on-ok="ok"
+		@on-cancel="cancel">
+		<p>点击取消按钮就不会保存了</p>
+		<p>点击确定按钮就会保存了</p>
+	</Modal>
 </div>
 </template>
 <script>
@@ -26,45 +35,81 @@ export default {
 	},
 	data(){
 		return {
+			modal1: false,
 			feindex:0,
-			felist:[]
+			fesonshowparamitem: JSON.parse(JSON.stringify(this.common.feparams))
 		}
 	},
 	methods:{
-		addfe(){
-			this.felist.push(this.feindex)
-			// console.log(this.$refs);
-			this.feindex+=1
+		ok () {
+			this.$Message.info('Clicked ok');
+			this.save()
 		},
-		handledelete(index){
-			this.felist.splice(this.felist.indexOf(index),1)
-			// console.log(this.$refs);
+		cancel () {
+			this.$Message.info('Clicked cancel');
+		},
+		addfe(role){
+			var length = this.fesonshowparamitem.length;
+			this.fesonshowparamitem.push({
+				role: { value: role },
+				myId: length ? (this.fesonshowparamitem[length - 1].myId + 1) : 1,
+				fefangshivalue: { value: "分箱"},
+				fenxiangfangshivalue: { value: "等频分箱"},
+				guolvfangshivalue: { value: "基于列过滤"},
+				guolvfangshivalue2: { value: "过滤未选中列"},
+				guolvfangshivalueno: { value: "等距分箱"},
+				guolvfangshivaluenofiled: { value: "保留"},
+				guolvfangshivaluetongjixinxi: { value: "方差"},
+				tianchongfangshivalue: { value: "填充平均值"},
+				fenxiangziduanvalue: { value: "*"},
+				fengxiangfenxiangshuvalue: { value: 5},
+				tianchongziduanvalue: { value: "*"},
+				fangchaxiaxianvalue: { value: 3},
+				queshilvshangxianvalue: { value: 0.5},
+				guolvtiaojian2value: { value: 1},
+				guolvtiaojianvalue: { value: 0.1},
+				guolvfenxiangshuvalue: { value: 5},
+				dureziduanvalue: { value: "*"},
+				zidingtianchongziduanvalue: { value: 0},
+				guolvziduanvalue: { value: "*"}
+			});
+		},
+		handledelete(myId){
+			this.fesonshowparamitem.splice(this.fesonshowparamitem.findIndex(function(v) {
+				return v.myId === myId;
+			}),1)
 		},
 		save() {
 			const params = this.$refs.fefather.map(component => {
 				return component.getData();
 			});
-			var feparams=[]
-			params.forEach(forparm);
-			function forparm(itemparam,itemindex){
-				var data=itemparam
-				var keys=[];   
-				var values=[];    
-				for(var key in data){   
-					if (data.hasOwnProperty(key) === true){  
-						if(data[key].isoutput==true){
-							keys.push(key);    
-							values.push(data[key]); 
-							// console.log(data[key].isoutput) 	
-						}						 
-					}      
+			this.common.feparams=JSON.parse(JSON.stringify(params))
+
+
+			var feshow=this.common.feparams
+			var feshowson=[]
+			// console.log(feshowson)
+
+			feshow.forEach(
+				(itemparam,itemindex)=>{
+					var data=itemparam
+					var keys=[];   
+					var values=[];    
+					for(var key in data){   
+						if (data.hasOwnProperty(key) === true){  
+							if(data[key].isoutput==true){
+								keys.push(key);    
+								values.push(data[key]); 
+							}
+						}
+					}
+					feshowson.push(values)
+					// console.log(feshowson)
+					this.common.feshow=feshowson
 				}
-				// console.log(keys)
-				// console.log(values)
-				feparams.push(values)
-			}
-			console.log(feparams)
-		}
+			)
+	
+		},
 		
 	}
 }
@@ -75,8 +120,8 @@ export default {
 	width: 100%;
 	overflow: hidden;
 }
-#addfe{
-	width: 100px;
+.addfe{
+	width: 140px;
 	height: 25px;
 	border: 1px solid blue;
 	background-color: blue;
@@ -86,13 +131,11 @@ export default {
 	line-height: 25px;
 }
 #save{
-	width: 50px;
+	width: 80px;
 	height: 25px;
-	border: 1px solid blue;
-	background-color: blue;
-	color: white;
+
+
 	margin: 10px;
-	text-align:center;
-	line-height: 25px;
+
 }
 </style>

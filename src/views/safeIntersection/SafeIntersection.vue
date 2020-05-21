@@ -9,12 +9,12 @@
     <Form ref="safeintersection" :model="safeintersection" :rules="ruleValidate" :label-width="80">
         <FormItem label="Host数据" prop="hostselectedvalue">
             <Select v-model="safeintersection.hostselectedvalue">
-                <Option v-for="item in hostData" :value="item.data_id" :key="item.data_id">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
+                <Option v-for="item in hostData" :value="item.data_path" :key="item.data_id">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
             </Select>
         </FormItem>
         <FormItem label="Guest数据" prop="guestselectedvalue">
             <Select v-model="safeintersection.guestselectedvalue">
-                <Option v-for="item in guestData" :value="item.data_id" :key="item.data_id">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
+                <Option v-for="item in guestData" :value="item.data_path" :key="item.data_id">数据ID:{{item.data_id}}名称:{{ item.data_name }},类型:{{item.data_type==0?"用户特征":"样本标签"}}</Option>
             </Select>
         </FormItem>
         <FormItem label="取数时间" prop="SampleFetchingtime">
@@ -30,7 +30,7 @@
             </Select>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('safeintersection')">Submit</Button>
+            <Button type="primary" @click="handleSubmit">Submit</Button>
         </FormItem>
     </Form>
 </div>
@@ -60,11 +60,11 @@ export default {
                 ],
             },
             safeintersection: {
-                SampleFetchingtime: '',
-                dataperiod: '',
-                datatype: '',
-                hostselectedvalue:"",
-                guestselectedvalue:""
+                SampleFetchingtime: this.common.safeintersection.SampleFetchingtime,
+                dataperiod: this.common.safeintersection.dataperiod,
+                datatype: this.common.safeintersection.datatype,
+                hostselectedvalue:this.common.safeintersection.hostselectedvalue,
+                guestselectedvalue:this.common.safeintersection.guestselectedvalue
             },
             ruleValidate: {
                 SampleFetchingtime: [
@@ -76,21 +76,27 @@ export default {
                 datatype: [
                     { required: true, message: '取数规则不能为空', trigger: 'change' }
                 ],
+                hostselectedvalue: [
+                    { required: true, message: 'Host不能为空', trigger: 'change' }
+                ],
+                guestselectedvalue: [
+                    { required: true, message: 'Guest不能为空', trigger: 'change' }
+                ],
             }
         }
     },
     methods: {
-        handleSubmit(SampleFetchingtime){
-            setTimeout(this.handleSub(SampleFetchingtime),10)
+        handleSubmit(){
+            setTimeout(this.handleSub(),10)
         },
-        handleSub (SampleFetchingtime) {
-            console.log("5555")
-            this.$refs[SampleFetchingtime].validate((valid) => {
+        handleSub () {
+           
+            this.$refs.safeintersection.validate((valid) => {
                 if (valid) {
                     this.$Message.success('Success!');
-                    console.log(this.safeintersection)
-                            // this.$router.push({path:'/featureEngineering'}) 
-
+                    // console.log(JSON.stringify(this.safeintersection));
+                    this.common.safeintersection=this.safeintersection
+                    console.log(this.common.safeintersection)
                 } else {
                     this.$Message.error('Fail!');
                 }
@@ -101,7 +107,7 @@ export default {
                 resList.forEach((item)=>{
                 // console.log(item)
                 item.forEach((itemson)=>{
-                    console.log(itemson.data_attribution)
+                    // console.log(itemson.data_attribution)
                     if(itemson.data_attribution==0){
                     this.hostData.push(itemson)
                     }else if(itemson.data_attribution==1){
