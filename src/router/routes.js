@@ -5,6 +5,7 @@ import SafeIntersection from '@/views/safeIntersection/SafeIntersection';
 import FeatureEngineering from '@/views/featureEngineering/FeatureEngineering';
 import DataManage from '@/views/dataManage/DataManage';
 import HistoricalTasks from '@/views/historicalTasks/HistoricalTasks';
+import HistoricalParams from '@/views/historicalTasks/historicalParams/HistoricalParams';
 import DataRegistration from '@/views/dataManage/dataRegistration/DataRegistration';
 const routes = [
   {
@@ -70,6 +71,14 @@ const routes = [
       title: '历史任务'
     },
     component: HistoricalTasks
+  },
+  {
+    path: '/historicalTasks/historicalParams',
+    name: 'historicalParams',
+    meta: {
+      title: '历史参数'
+    },
+    component: HistoricalParams
   },
   {
     path: '',

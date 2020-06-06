@@ -1,8 +1,9 @@
 import axios from 'axios';
-
+// 开发：
 const http = axios.create({
   baseURL: window.location.origin + '/study'
 });
+// 生产：
 // const http = axios.create();
 
 http.interceptors.response.use(function (response) {

@@ -7,7 +7,7 @@ export const taskForm = {
     namespace: '',
     table_name: ''
   },
-  model_type: '',
+  model_type: "Hetero Logistic Regression",
   model: {
     id: '',
     version: ''

@@ -79,6 +79,7 @@ export default {
         ]
 
       },
+      model_type:"HeteroLR",
       xgboostparams:[
         {label:"树数",value:100},
         {label:"学习率",value:0.01},
@@ -105,16 +106,77 @@ export default {
           this.$Message.info('Clicked cancel');
       },
      createHttp () {  
-          var params={"name": this.common.studyTask[0], "role": "guest", "task": "train", "data": {"start": this.common.studyTask[2].SampleFetchingtime, "n":  Number(this.common.studyTask[2].dataperiod), "match": this.common.studyTask[2].datatype!="用户特征早一个周期取数", "path_host": this.common.studyTask[2].hostselectedvalue, "path_guest": this.common.studyTask[2].guestselectedvalue}, "modules": {"DataIO_host": {"missing_fill": [ this.common.studyTask[3][0][1].value=="缺失值填充"], "missing_fill_method": ["mean"]}, "HeteroFeatureBinning_host": {"method": ["quantile"], "bin_num": [5]}, "HeteroLR": {"max_iter": 5, "cv_param": {"n_splits": 5, "need_cv": false}}}}
-          console.log(params)
+          
+          // var lrparam={
+          //   "HeteroLR": {
+          //       "penalty": this.common.studyTask[1].lrreguvalue,
+          //       "max_iter":this.common.studyTask[1].lrparams[0].value,
+          //       "learning_rate":this.common.studyTask[1].lrparams[2].value,
+          //       "alpha":this.common.studyTask[1].lrparams[3].value,
+          //       "cv_param": {
+          //         "n_splits": 5,
+          //         "need_cv": false
+          //       }
+          //   }
+          // }
+          // var boostparam={
+          //     "HeteroSecureBoost": {
+          //         "num_trees":  this.common.studyTask[1][0].value,
+          //         "learning_rate": this.common.studyTask[1][1].value,
+          //         "subsample_feature_rate":this.common.studyTask[1][3].value,
+          //         "n_iter_no_change":True,
+          //         "tol":this.common.studyTask[1][2].value, 
+          //         "alpha": this.common.studyTask[1][4].value,
+          //         "tree_param": {
+          //             "min_sample_split": this.common.studyTask[1][6].value,
+          //         },
+          //         "cv_param": {
+          //             "n_splits": 5,
+          //             "need_cv": false
+          //         }
+          //   }
+          // }
+          var params={
+            "name": this.common.studyTask[0], 
+            "role": "guest", 
+            "task": "train", 
+            "data": {
+              "start": this.common.studyTask[2].SampleFetchingtime, 
+              "n":  Number(this.common.studyTask[2].dataperiod), 
+              "match": this.common.studyTask[2].datatype!="用户特征早一个周期取数", 
+              "path_host": this.common.studyTask[2].hostselectedvalue, 
+              "path_guest": this.common.studyTask[2].guestselectedvalue
+            }, 
+            "modules": {
+              "DataIO_host": {
+                 "missing_fill": [ this.common.studyTask[3][0][1].value=="缺失值填充"], "missing_fill_method": ["mean"]
+              }, 
+              "HeteroFeatureBinning_host": {
+                  "method": ["quantile"], "bin_num": [5]
+              }
+            },    
+            "algorithms":{
+              "HeteroLR": {
+                "penalty": this.common.studyTask[1].lrreguvalue,
+                "max_iter":this.common.studyTask[1].lrparams[0].value,
+                "learning_rate":this.common.studyTask[1].lrparams[2].value,
+                "alpha":this.common.studyTask[1].lrparams[3].value,
+                "cv_param": {
+                  "n_splits": 5,
+                  "need_cv": false
+                }
+              }
+            }
+          }
+          // console.log(params)
 			    return   http.post("Submit",params)
 		},
     handleSubmit () {
       // console.log(this.common.safeintersection)
       this.common.studyTask=[]
-      this.common.studyTask.push(this.projectname,this.taskForm.model_type=='Hetero Secureboost'?this.xgboostparams:this.lrparampapa,this.common.safeintersection,this.common.feshow)
+      this.common.studyTask.push(this.projectname,this.taskForm.model_type=='Hetero Secureboost'?this.xgboostparams:this.lrparampapa,this.common.safeintersection,this.common.feshow,this.HeteroLR=this.taskForm.model_type=='Hetero Secureboost'?"HeteroLR":"HeteroSecureBoost")
       console.log(this.common.studyTask)
-      console.log(this.common.studyTask[0])
+      console.log( this.common.studyTask[1].lrreguvalue)
       Promise.all([this.createHttp()]).then(resList => {
           console.log(resList)
       });

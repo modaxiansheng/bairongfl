@@ -51,11 +51,11 @@ import http from '@/utils/http';
                 }else{
                     datatype=1
                 }    
-			    return  http.get('insertDatainfo?data_name='+this.dataregistration.dataname+'&data_type='+ datatype+'&data_attribution=1&data_path='+this.dataregistration.datapath);
+			    return  http.get('insertDatainfo?data_name='+this.dataregistration.dataname+'&data_type='+ datatype+'&data_attribution=0&data_path='+this.dataregistration.datapath);
 		    },
             getdata(){
                 Promise.all([this.createHttp()]).then(resList => {
-                    console.log(resList)
+                    // console.log(resList)
                 });
             },
                 

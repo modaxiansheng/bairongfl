@@ -8,6 +8,15 @@
     </div>
 	<div @click="adddata" id="adddata">注册</div>
 	<Table border  :columns="columns1" :data="datason"></Table>
+	<Modal
+        v-model="modal1"
+        title="您确定要删除吗"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <p>您只能删除您注册的数据</p>
+        <p>点击确定就会删除</p>
+        <p>点击取消就不会删除</p>
+    </Modal>
 </div>
 </template>
 <script>
@@ -19,6 +28,8 @@ export default {
 	
 	data(){
 		return {
+			params:"",
+			modal1:false,
 			columns1: [
 				{
 					key: 'data_id',
@@ -58,7 +69,10 @@ export default {
 								},
 								on: {
 									click: () => {
-										this.remove(params)
+										this.modal1 = true
+										console.log(this)
+										
+										this.params=params
 									}
 								}
 							}, 'Delete')
@@ -72,6 +86,13 @@ export default {
 		}
 	},
 	methods:{
+		ok () {
+			this.$Message.info('Clicked ok');
+			this.remove(this.params)
+		},
+		cancel () {
+			this.$Message.info('Clicked cancel');
+		},
 		remove (params) {
 			console.log(params)
 			if(params.row.data_attribution=="host"){
@@ -93,7 +114,7 @@ export default {
 				// console.log(this.data1)this.data1
 				this.data1.forEach((ii)=>{
 					ii.forEach((iison)=>{
-						// console.log(iison)
+						console.log(iison)
 						if(iison.data_type==0){
 							iison.data_type="用户特征"
 						}else if(iison.data_type==1){

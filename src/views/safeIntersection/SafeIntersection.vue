@@ -31,6 +31,7 @@
         </FormItem>
         <FormItem>
             <Button type="primary" @click="handleSubmit">Submit</Button>
+            <Button type="primary" @click="handleSubmit2">fateboard</Button>
         </FormItem>
     </Form>
 </div>
@@ -45,20 +46,8 @@ export default {
             hostData: [
             ],
             guestData: [],
-            btnLoading: false,
             taskForm,
             taskRule: {},
-            baseRule: {
-                'projectname': [
-                { required: true, message: '请输入项目的名称', trigger: 'blur' }
-                ],
-                'host.namespace': [
-                { required: true, message: '请选择Host方数据', trigger: 'change' }
-                ],
-                'guest.namespace': [
-                { required: true, message: '请选择Guest方数据', trigger: 'change' }
-                ],
-            },
             safeintersection: {
                 SampleFetchingtime: this.common.safeintersection.SampleFetchingtime,
                 dataperiod: this.common.safeintersection.dataperiod,
@@ -86,8 +75,36 @@ export default {
         }
     },
     methods: {
+        handleSubmit2(){
+            Promise.all([ this.createHttp()]).then(resList => {
+                console.log(resList)
+                resList.forEach(element => {
+                    console.log(element)
+                    if(element.status==0){
+                        window.open(element.result.board_url);
+                    }          
+                });
+            });
+        },
         handleSubmit(){
             setTimeout(this.handleSub(),10)
+           
+        },
+        createHttp () {
+            var submit_info = {
+                'name' : '安全求交'+ Date.parse(new Date()),
+                'role':'guest',
+                'task':'intersection',
+                'data':{
+                    'start':this.safeintersection.SampleFetchingtime,
+                    'n':Number(this.safeintersection.dataperiod),
+                    'match':this.safeintersection.datatype!="用户特征早一个周期取数",
+                    'path_host':this.safeintersection.hostselectedvalue,
+                    'path_guest':this.safeintersection.guestselectedvalue,
+                }
+            }
+            console.log(submit_info)
+            return http.post("Submit",submit_info)
         },
         handleSub () {
            
@@ -96,7 +113,7 @@ export default {
                     this.$Message.success('Success!');
                     // console.log(JSON.stringify(this.safeintersection));
                     this.common.safeintersection=this.safeintersection
-                    console.log(this.common.safeintersection)
+                    // console.log(this.common.safeintersection)
                 } else {
                     this.$Message.error('Fail!');
                 }
