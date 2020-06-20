@@ -17,6 +17,14 @@
 
             <div class="stmodelparams" v-if="taskForm.model_type=='Hetero Logistic Regression'">
                   <div class="modelparam" >
+                      <FormItem label="训练模式" >
+                          <Select v-model="taskparamselected">
+                            <Option v-for="item in taskparam" :value="item.value" :key="item.label">{{ item.label }}</Option>
+                          </Select>
+                          <Select v-model="taskparamselectedCV" v-if="taskparamselected=='CV'">
+                            <Option v-for="item in taskparamCV" :value="item.value" :key="item.label">{{ item.label }}</Option>
+                          </Select>
+                      </FormItem>
                       <FormItem label="正则化类型" >
                           <Select v-model="lrparampapa.lrreguvalue">
                             <Option v-for="item in lrparampapa.lrregu" :value="item.value" :key="item.label">{{ item.label }}</Option>
@@ -31,6 +39,14 @@
                   
             </div>
             <div class="stmodelparams" v-if="taskForm.model_type=='Hetero Secureboost'">
+                  <FormItem label="训练模式" >
+                      <Select v-model="taskparamselected">
+                        <Option v-for="item in taskparam" :value="item.value" :key="item.label">{{ item.label }}</Option>
+                      </Select>
+                      <Select v-model="taskparamselectedCV" v-if="taskparamselected=='CV'">
+                            <Option v-for="item in taskparamCV" :value="item.value" :key="item.label">{{ item.label }}</Option>
+                      </Select>
+                  </FormItem>
                   <div class="modelparam"  v-for="item in xgboostparams" :key="item.label">
                       <FormItem :label="item.label" >
                             <Input v-model="item.value" clearable style="width: 200px"></Input>                      
@@ -64,6 +80,18 @@ export default {
       modal1: false,
       projectname:"",
       btnLoading: false,
+      taskparamselectedCV:"5",
+      taskparamCV:[
+        {label:"2",value:"2"},
+        {label:"3",value:"3"},
+        {label:"4",value:"4"},
+        {label:"5",value:"5"},
+      ],
+      taskparamselected:"train",
+      taskparam:[
+        {label:"train",value:"train"},
+        {label:"CV",value:"CV"},
+      ],
       lrparampapa:{
         lrreguvalue:"L1",
         lrregu:[
@@ -72,10 +100,8 @@ export default {
         ],
         lrparams:[   
           {label:"最大迭代次数",value:1000},
-          {label:"收敛阈值",value:0.00001},
           {label:"学习率",value:0.01},
           {label:"正则化惩罚系数",value:2},
-          {label:"训练集比例",value:0.8},  
         ]
 
       },
@@ -86,9 +112,7 @@ export default {
         {label:"最小分裂增益",value:0.001},
         {label:"特征采样比例",value:0.8},
         {label:"正则化系数",value:0.5},
-        {label:"分箱数	",value:32},
         {label:"可分裂节点最小样本数	",value:2},
-        {label:"训练集比例	",value:0.8},
       ],
       tabType: 'study',
 
@@ -106,105 +130,104 @@ export default {
           this.$Message.info('Clicked cancel');
       },
      createHttp () {  
-          
-          // var lrparam={
-          //   "HeteroLR": {
-          //       "penalty": this.common.studyTask[1].lrreguvalue,
-          //       "max_iter":this.common.studyTask[1].lrparams[0].value,
-          //       "learning_rate":this.common.studyTask[1].lrparams[2].value,
-          //       "alpha":this.common.studyTask[1].lrparams[3].value,
-          //       "cv_param": {
-          //         "n_splits": 5,
-          //         "need_cv": false
-          //       }
-          //   }
-          // }
-          // var boostparam={
-          //     "HeteroSecureBoost": {
-          //         "num_trees":  this.common.studyTask[1][0].value,
-          //         "learning_rate": this.common.studyTask[1][1].value,
-          //         "subsample_feature_rate":this.common.studyTask[1][3].value,
-          //         "n_iter_no_change":True,
-          //         "tol":this.common.studyTask[1][2].value, 
-          //         "alpha": this.common.studyTask[1][4].value,
-          //         "tree_param": {
-          //             "min_sample_split": this.common.studyTask[1][6].value,
-          //         },
-          //         "cv_param": {
-          //             "n_splits": 5,
-          //             "need_cv": false
-          //         }
-          //   }
-          // }
-          var params={
-            "name": this.common.studyTask[0], 
-            "role": "guest", 
-            "task": "train", 
-            "data": {
-              "start": this.common.studyTask[2].SampleFetchingtime, 
-              "n":  Number(this.common.studyTask[2].dataperiod), 
-              "match": this.common.studyTask[2].datatype!="用户特征早一个周期取数", 
-              "path_host": this.common.studyTask[2].hostselectedvalue, 
-              "path_guest": this.common.studyTask[2].guestselectedvalue
-            }, 
-            "modules": {
-              "DataIO_host": {
-                 "missing_fill": [ this.common.studyTask[3][0][1].value=="缺失值填充"], "missing_fill_method": ["mean"]
-              }, 
-              "HeteroFeatureBinning_host": {
-                  "method": ["quantile"], "bin_num": [5]
+      //  alert(this.common.studyTask[6])
+          if (this.common.studyTask[4]=="HeteroLR"){
+            
+              var lrparams={
+                  "name": this.common.studyTask[0], 
+                  "role": this.common.coderole.role, 
+                  "task": this.common.studyTask[5]=="train"?"train":"train_cv", 
+                  "data": {
+                    "start": this.common.studyTask[2].SampleFetchingtime, 
+                    "n":  Number(this.common.studyTask[2].dataperiod), 
+                    "match": this.common.studyTask[2].datatype!="用户特征早一个周期取数", 
+                    "path_host": this.common.studyTask[2].hostselectedvalue, 
+                    "path_guest": this.common.studyTask[2].guestselectedvalue
+                  }, 
+                  "modules": {
+                    "params":this.common.studyTask[3]
+                  },    
+                  "algorithms":{
+                    "HeteroLR": {
+                      "penalty": this.common.studyTask[1].lrreguvalue,
+                      "max_iter":this.common.studyTask[1].lrparams[0].value,
+                      "learning_rate":this.common.studyTask[1].lrparams[1].value,
+                      "alpha":this.common.studyTask[1].lrparams[2].value,
+                      "cv_param": {
+                          "n_splits": Number(this.common.studyTask[6]),
+                          "need_cv":  this.common.studyTask[5]!="train"
+                      }
+                    }
+                  }
               }
-            },    
-            "algorithms":{
-              "HeteroLR": {
-                "penalty": this.common.studyTask[1].lrreguvalue,
-                "max_iter":this.common.studyTask[1].lrparams[0].value,
-                "learning_rate":this.common.studyTask[1].lrparams[2].value,
-                "alpha":this.common.studyTask[1].lrparams[3].value,
-                "cv_param": {
-                  "n_splits": 5,
-                  "need_cv": false
-                }
+              console.log(lrparams)
+              return   http.post("Submit1",lrparams)
+          }else{
+              var boostparams={
+                  "name": this.common.studyTask[0], 
+                  "role": this.common.coderole.role, 
+                  "task": this.common.studyTask[5]=="train"?"train":"train_cv", 
+                  "data": {
+                    "start": this.common.studyTask[2].SampleFetchingtime, 
+                    "n":  Number(this.common.studyTask[2].dataperiod), 
+                    "match": this.common.studyTask[2].datatype!="用户特征早一个周期取数", 
+                    "path_host": this.common.studyTask[2].hostselectedvalue, 
+                    "path_guest": this.common.studyTask[2].guestselectedvalue
+                  }, 
+                  "modules": {
+                    "params":this.common.studyTask[3]
+                  },    
+                  "algorithms":{
+                      "HeteroSecureBoost": {
+                            "num_trees":  this.common.studyTask[1][0].value,
+                            "learning_rate": this.common.studyTask[1][1].value,
+                            "subsample_feature_rate":this.common.studyTask[1][3].value,
+                            "n_iter_no_change":true,
+                            "tol":this.common.studyTask[1][2].value, 
+                            "alpha": this.common.studyTask[1][4].value,
+                            "tree_param": {
+                                "min_sample_split": this.common.studyTask[1][6].value,
+                            },
+                            "cv_param": {
+                                "n_splits": Number(this.common.studyTask[6]),
+                                "need_cv":  this.common.studyTask[5]!="train"
+                            }
+                      }
+                  }
               }
-            }
+              console.log(boostparams)
+              return   http.post("Submit1",boostparams)
           }
+
+
           // console.log(params)
-			    return   http.post("Submit",params)
+			    
 		},
     handleSubmit () {
-      // console.log(this.common.safeintersection)
+      console.log( this.common.feshow)
       this.common.studyTask=[]
-      this.common.studyTask.push(this.projectname,this.taskForm.model_type=='Hetero Secureboost'?this.xgboostparams:this.lrparampapa,this.common.safeintersection,this.common.feshow,this.HeteroLR=this.taskForm.model_type=='Hetero Secureboost'?"HeteroLR":"HeteroSecureBoost")
+      this.common.studyTask.push(
+          this.projectname,
+          this.taskForm.model_type=='Hetero Secureboost'?this.xgboostparams:this.lrparampapa,
+          this.common.safeintersection,
+          this.common.feshow,
+          this.HeteroLR=this.taskForm.model_type=='Hetero Secureboost'?"HeteroSecureBoost":"HeteroLR",
+          this.taskparamselected,
+          this.taskparamselected=="CV"?this.taskparamselectedCV:""
+      )
       console.log(this.common.studyTask)
-      console.log( this.common.studyTask[1].lrreguvalue)
-      Promise.all([this.createHttp()]).then(resList => {
-          console.log(resList)
+      // console.log( this.common.studyTask[1].lrreguvalue)
+      Promise.all([ this.createHttp()]).then(resList => {
+            console.log(resList)
+            resList.forEach(element => {
+                console.log(element)
+                if(element.status==0){
+                    // window.open(element.result.board_url);
+                    console.log(element.result.board_url)
+                }          
+            });
       });
-     
-
-
-
-
-
-
-
-
-
-
-      // setTimeout(() => {
-      //   this.$refs.taskForm.validate(bool => {
-      //     if (!bool) {
-      //       return false;
-      //     }
-      //     this.btnLoading = true;
-      //     const params = {
-      //       data: {
-      //         host: this.taskForm.host,
-      //         guest: this.taskForm.guest 
-      //       }
-      //     };
-      //   });
-      // }, 10);
+      
     },
  
   },

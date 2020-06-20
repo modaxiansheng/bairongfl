@@ -6,7 +6,7 @@
             <p>安全求交参数配置，特征工程参数配置和算法参数配置</p>
         </Card>
  	</div>
-	<Table :columns="columns1" :data="datasons"></Table>
+	<Table border :columns="columns1" :data="datasons"></Table>
     <Page :total="page.total" :page-size="page.size" show-total  @on-change="changepage"></Page>
 	<Modal
         v-model="modal1"
@@ -24,6 +24,7 @@ import http from '@/utils/http';
 export default {
 	data(){
 		return {
+
 			params:"",
 			modal1:false,
 			page:{
@@ -34,7 +35,8 @@ export default {
 			columns1: [
 				{
 					key: 'job_id',
-					title: '任务编号'
+					title: '任务编号',
+					sortable: true
 				},
 				{
 					key: 'job_name',
@@ -42,19 +44,23 @@ export default {
         		},
 				{
 					key: 'model_version',
-					title: '模型名称'
+					title: '模型名称',
+					sortable: true
 				},
 				{
 					key: 'job_type',
-					title: '训练类型'
+					title: '训练类型',
+					sortable: true
 				},
 				{
 					key: 'job_attribution',
-					title: '任务归属'
+					title: '任务归属',
+					sortable: true
 				},
 				{
 					key: 'job_create_time',
-					title: '创建时间'
+					title: '创建时间',
+					sortable: true
 				},
 				{
 					title: 'Action',
@@ -132,7 +138,7 @@ export default {
 		},
 		remove (params) {
 			// console.log(params)
-			if(params.row.job_attribution=="guest"){
+			if(params.row.job_attribution==this.common.coderole.role){
 				this.datasons.splice(params.index, 1);
 				console.log(params)
 				http.get('deleteTaskinfo?job_id='+params.row.job_id)

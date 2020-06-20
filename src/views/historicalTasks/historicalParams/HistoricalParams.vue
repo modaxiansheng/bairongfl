@@ -6,6 +6,9 @@
             <p>安全求交参数配置，特征工程参数配置和算法参数配置</p>
         </Card>
 	</div>
+	<div class="return">
+		<Button type="primary"  @click="handleReturn">返回</Button>
+	</div>
 	<Row >
 		<Col style="background:#eee;padding: 20px" >
             <Card>
@@ -62,14 +65,13 @@ export default {
 	mounted(){
 		
 		this.paramsjson=this.$route.params;
+		console.log(this.paramsjson)
+	},
+	methods:{
+		handleReturn(){
+			window.history.back();
+		}
 	}
-	// methods:{
-	// 	change(newvalue,oldvalue){
-			
-	// 		this.paramsjson=newvalue
-	// 		console.log(this.paramsjson)
-	// 	}
-	// }
 };
 
 </script>
@@ -91,15 +93,10 @@ export default {
 	top: 50px;
 	
 }
-#return{
+.return{
 	right: 100px;
 	position: absolute;
-	background-color: #ccc;
-	border: 1px solid #ccc;
-	border-radius: 5%;
 	top: 140px;
-	width: 100px;
-	height: 40px;
 	text-align: center;
 	font-size: 30px;
 }

@@ -101,7 +101,7 @@ export default {
     createHttp () {
       var submit_info = {
           'name' : this.modelInfo.predictprojectname,
-          'role':'guest',
+          'role':this.common.coderole.role,
           'task':'predict',
           'data':{
               'start':this.modelInfo.SampleFetchingtime,

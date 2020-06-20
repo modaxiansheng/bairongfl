@@ -55,7 +55,7 @@ export default {
 				myId: length ? (this.fesonshowparamitem[length - 1].myId + 1) : 1,
 				fefangshivalue: { value: "分箱"},
 				fenxiangfangshivalue: { value: "等频分箱"},
-				guolvfangshivalue: { value: "基于列过滤"},
+				guolvfangshivalue: { value: "根据IV值过滤"},
 				guolvfangshivalue2: { value: "过滤未选中列"},
 				guolvfangshivalueno: { value: "等距分箱"},
 				guolvfangshivaluenofiled: { value: "保留"},
@@ -98,13 +98,16 @@ export default {
 					for(var key in data){   
 						if (data.hasOwnProperty(key) === true){  
 							if(data[key].isoutput==true){
+								// if(data[key].isoutput==true){
+								// }
+								// console.log(data[key])
 								keys.push(key);    
 								values.push(data[key]); 
 							}
 						}
 					}
 					feshowson.push(values)
-					// console.log(feshowson)
+					console.log(feshowson)
 					this.common.feshow=feshowson
 				}
 			)

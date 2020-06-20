@@ -1,4 +1,10 @@
 <script>
+// 17=>host
+// 18=>guest
+var coderole={
+    role:"guest",
+    rolecode:1
+};
 var safeintersection={
     SampleFetchingtime: '',
     dataperiod: '',
@@ -15,6 +21,7 @@ export default {
     feparams,
     studyTask,
     feshow,
-    historicalParams
+    historicalParams,
+    coderole
 }
 </script>

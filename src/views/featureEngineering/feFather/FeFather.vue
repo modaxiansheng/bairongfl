@@ -36,17 +36,17 @@
 		<div class="fe" v-if="guolvfangshivalue=='根据IV值过滤'&&fefangshivalue=='特征过滤'">
 			<div class="felabel"><span></span></div>
 			<div class="fevalue">
-				<Select v-model="guolvfangshivalueno" style="width:200px" name="fefangshi" >
+				<!-- <Select v-model="guolvfangshivalueno" style="width:200px" name="fefangshi" >
 					<Option v-for="guolvfangshiitem in guolvfangshisno" :value="guolvfangshiitem.value" :key="guolvfangshiitem.value">{{ guolvfangshiitem.label }}</Option>
-				</Select>
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				分箱数:
-				<Input v-model="guolvfenxiangshuvalue" placeholder="Enter int" clearable style="width: 200px" />
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				过滤条件:
+				</Select> -->
+				<!-- &nbsp;&nbsp;&nbsp;&nbsp; -->
+				<!-- 分箱数: -->
+				<!-- <Input v-model="guolvfenxiangshuvalue" placeholder="Enter int" clearable style="width: 200px" />
+				&nbsp;&nbsp;&nbsp;&nbsp; -->
+				<!-- 过滤条件: -->
 				<Input  v-model="guolvtiaojianvalue" placeholder="Enter int" clearable style="width: 100px" />
-				到
-				<Input  v-model="guolvtiaojian2value" placeholder="Enter int" clearable style="width: 100px" />
+				<!-- 到 -->
+				<!-- <Input  v-model="guolvtiaojian2value" placeholder="Enter int" clearable style="width: 100px" /> -->
 
 			</div>	
 		</div>
@@ -83,14 +83,14 @@
 				</Select>
 			</div>	
 		</div>
-		<div class="fe" v-if="fefangshivalue=='特征过滤'&&(guolvfangshivalue=='根据IV值过滤'||guolvfangshivalue=='根据统计信息值过滤')">
+		<!-- <div class="fe" v-if="fefangshivalue=='特征过滤'&&(guolvfangshivalue=='根据IV值过滤'||guolvfangshivalue=='根据统计信息值过滤')">
 			<div class="felabel guolvfangshisnofiled"><span>未选取字段处理方式 : </span></div>
 			<div class="fevalue">
 				<Select v-model="guolvfangshivaluenofiled" style="width:200px" name="fefangshi" >
 					<Option v-for="guolvfangshiitem in guolvfangshisnofiled" :value="guolvfangshiitem.value" :key="guolvfangshiitem.value">{{ guolvfangshiitem.label }}</Option>
 				</Select>
 			</div>	
-		</div>
+		</div> -->
 		<div class="fe" v-if="fefangshivalue=='缺失值填充'">
 			<div class="felabel"><span>填充方式 : </span></div>
 			<div class="fevalue">
@@ -170,9 +170,9 @@ export default {
 			],
 
 			guolvfangshis:[
-				{value:"基于列过滤",label:"基于列过滤"},
+				// {value:"基于列过滤",label:"基于列过滤"},
 				{value:"根据IV值过滤",label:"根据IV值过滤"},
-				{value:"根据统计信息值过滤",label:"根据统计信息值过滤"},
+				// {value:"根据统计信息值过滤",label:"根据统计信息值过滤"},
 			],
 
 			guolvfangshis2:[
@@ -252,11 +252,13 @@ export default {
 				},				
 				guolvfangshivalueno:{
 					value:this.guolvfangshivalueno,
-					isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
+					isoutput:false
+					// isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
 				},
 				guolvfangshivaluenofiled:{
 					value:this.guolvfangshivaluenofiled,
-					isoutput:this.fefangshivalue=='特征过滤'&&(this.guolvfangshivalue=='根据IV值过滤'||this.guolvfangshivalue=='根据统计信息值过滤')
+					isoutput:false
+					// isoutput:this.fefangshivalue=='特征过滤'&&(this.guolvfangshivalue=='根据IV值过滤'||this.guolvfangshivalue=='根据统计信息值过滤')
 				},
 				guolvfangshivaluetongjixinxi:{
 					value:this.guolvfangshivaluetongjixinxi,
@@ -288,7 +290,8 @@ export default {
 				},
 				guolvtiaojian2value:{
 					value:this.guolvtiaojian2value,
-					isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
+					isoutput:false
+					// isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
 				},
 				guolvtiaojianvalue:{
 					value:this.guolvtiaojianvalue,
@@ -296,7 +299,8 @@ export default {
 				},
 				guolvfenxiangshuvalue:{
 					value:this.guolvfenxiangshuvalue,
-					isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
+					isoutput:false
+					// isoutput:this.guolvfangshivalue=='根据IV值过滤'&&this.fefangshivalue=='特征过滤'
 				},
 				dureziduanvalue:{
 					value:this.dureziduanvalue,

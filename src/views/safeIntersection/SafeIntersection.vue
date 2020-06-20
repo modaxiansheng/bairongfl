@@ -76,15 +76,25 @@ export default {
     },
     methods: {
         handleSubmit2(){
-            Promise.all([ this.createHttp()]).then(resList => {
-                console.log(resList)
-                resList.forEach(element => {
-                    console.log(element)
-                    if(element.status==0){
-                        window.open(element.result.board_url);
-                    }          
-                });
-            });
+              this.$refs.safeintersection.validate((valid) => {
+                if (valid) {
+                    this.$Message.success('Success!');
+                    // console.log(JSON.stringify(this.safeintersection));
+                    // console.log(this.common.safeintersection)
+                     Promise.all([ this.createHttp()]).then(resList => {
+                        console.log(resList)
+                        resList.forEach(element => {
+                            console.log(element)
+                            if(element.status==0){
+                                window.open(element.result.board_url);
+                            }          
+                        });
+                    });
+                } else {
+                    this.$Message.error('Fail!');
+                }
+            })
+           
         },
         handleSubmit(){
             setTimeout(this.handleSub(),10)
@@ -93,7 +103,7 @@ export default {
         createHttp () {
             var submit_info = {
                 'name' : '安全求交'+ Date.parse(new Date()),
-                'role':'guest',
+                'role':this.common.coderole.role,
                 'task':'intersection',
                 'data':{
                     'start':this.safeintersection.SampleFetchingtime,

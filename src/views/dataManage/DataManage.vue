@@ -95,7 +95,7 @@ export default {
 		},
 		remove (params) {
 			console.log(params)
-			if(params.row.data_attribution=="host"){
+			if(params.row.data_attribution==this.common.coderole.role){
 				this.datason.splice(params.index, 1);
 				http.get('deleteDatainfo?data_id='+params.row.data_id)
 			}

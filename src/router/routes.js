@@ -36,7 +36,7 @@ const routes = [
     path: '/featureEngineering',
     name: 'featureEngineering',
     meta: {
-      title: '特征成功'
+      title: '特征工程'
     },
     component: FeatureEngineering
   },
